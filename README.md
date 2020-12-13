@@ -4,6 +4,7 @@
 <ul>
   <li>You need to have XAMPP or LAMP on your machine</li>
   <li>Fill 'database.php' file with your DB data</li>
+  <li>Run 'npm install' command in '/client' folder</li>
   <li>Run 'npm start' command in '/client' folder</li>
 </ul>
 
