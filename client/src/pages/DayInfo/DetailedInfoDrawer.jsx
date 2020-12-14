@@ -99,7 +99,7 @@ export default class DetailedInfoDrawer extends Component {
           <CustomButton
             text_color="rgba(255, 255, 255, 0.5)"
             border_color="rgba(255, 255, 255, 0.3)"
-            onClick={() => console.log("click")}
+            onClick={this.props.showWeekInfo}
           >
             SHOW WEEK INFO
           </CustomButton>

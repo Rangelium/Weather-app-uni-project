@@ -2,3 +2,5 @@
 /client/build
 
 /api/config/database.php
+
+fillDB.txt

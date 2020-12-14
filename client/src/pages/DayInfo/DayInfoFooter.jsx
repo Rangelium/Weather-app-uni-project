@@ -3,25 +3,6 @@ import styled from "styled-components";
 import dayjs from "dayjs";
 import AnimatedNumber from "animated-number-react";
 
-// Icons
-import {
-  WiCloudy,
-  WiDaySunny,
-  WiSnow,
-  WiRain,
-  WiNightFog,
-  WiCloudyWindy,
-} from "react-icons/wi";
-
-const IconsForWeatherArr = {
-  Sunny: <WiDaySunny />,
-  Cloudly: <WiCloudy />,
-  Windy: <WiCloudyWindy />,
-  Snowy: <WiSnow />,
-  Rainy: <WiRain />,
-  Foggy: <WiNightFog />,
-};
-
 export default class DayInfoFooter extends Component {
   render() {
     return (
@@ -43,7 +24,7 @@ export default class DayInfoFooter extends Component {
                     : "Loading..."}
                 </p>
               </div>
-              {IconsForWeatherArr[this.props.data?.weatherDescription]}
+              {this.props.IconsForWeather[this.props.data?.weatherDescription]}
             </div>
           </div>
         </StyledWidget>

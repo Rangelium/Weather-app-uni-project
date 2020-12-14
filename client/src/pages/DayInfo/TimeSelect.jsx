@@ -94,9 +94,19 @@ export default class TimeSelect extends Component {
           <AnimatedNumber
             className="time-time"
             value={parseInt(this.props.data.timeMeasurement.slice(3, 5))}
-            formatValue={(value) =>
-              value.toFixed(0).length !== 2 ? value.toFixed(0) + "0" : value.toFixed(0)
-            }
+            formatValue={(value) => {
+              if (this.props.data.timeMeasurement.slice(3, 5)[0] === "0") {
+                return value.toFixed(0).length !== 2
+                  ? "0" + value.toFixed(0)
+                  : value.toFixed(0);
+              } else if (this.props.data.timeMeasurement.slice(3, 5)[1] === "0") {
+                return value.toFixed(0).length !== 2
+                  ? value.toFixed(0) + "0"
+                  : value.toFixed(0);
+              } else {
+                return value.toFixed(0);
+              }
+            }}
           />
         </div>
 
