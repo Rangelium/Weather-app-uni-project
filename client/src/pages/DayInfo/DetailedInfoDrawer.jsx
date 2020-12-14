@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import AnimatedNumber from "animated-number-react";
 
-import { CustomButton } from "../../../components/CustomInputs";
+import { CustomButton } from "../../components/CustomInputs";
 import { Divider } from "@material-ui/core";
 
 // import HeaderText from "./TextSvg.svg";
@@ -82,6 +82,12 @@ export default class DetailedInfoDrawer extends Component {
                     formatValue={(value) => value.toFixed(0)}
                   />
                   <span></span>
+                </p>
+              </div>
+              <div className="details-item">
+                <p>
+                  Weather:
+                  <span>{this.props.data.weatherDescription}</span>
                 </p>
               </div>
             </>

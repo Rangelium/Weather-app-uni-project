@@ -3,7 +3,7 @@ import styled from "styled-components";
 import AnimatedNumber from "animated-number-react";
 
 import { Slider } from "@material-ui/core";
-import { CustomButton } from "../../../components/CustomInputs";
+import { CustomButton } from "../../components/CustomInputs";
 
 // Icons
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -19,6 +19,7 @@ export default class TimeSelect extends Component {
   };
 
   componentDidMount() {
+    if (!this.props.data) return;
     this.prepareSliderData();
 
     setTimeout(() => {
@@ -87,9 +88,7 @@ export default class TimeSelect extends Component {
           <AnimatedNumber
             className="time-time"
             value={parseInt(this.props.data.timeMeasurement.slice(0, 2))}
-            formatValue={(value) =>
-              value.toFixed(0).length !== 2 ? "0" + value.toFixed(0) : value.toFixed(0)
-            }
+            formatValue={(value) => value.toFixed(0)}
           />
           <span className="time-time colon">:</span>
           <AnimatedNumber
@@ -108,7 +107,11 @@ export default class TimeSelect extends Component {
 
         <div className="rangeInput">
           <p>Select which time to show</p>
-          <CustomButton disabled={!this.state.active} onClick={() => alert("SOON")}>
+          <CustomButton
+            text_color="#fff"
+            disabled={!this.state.active}
+            onClick={() => alert("SOON")}
+          >
             Add new
           </CustomButton>
           {this.state.marks && (
@@ -133,9 +136,12 @@ export default class TimeSelect extends Component {
 
 const StyledContainer = styled.div`
   display: grid;
-  grid-template-columns: 184px 1fr;
+  grid-template-columns: 200px 1fr;
   align-items: center;
   position: relative;
+  transition: 0.3s background-color;
+  backdrop-filter: ${(props) => (props.active ? "blur(5px)" : "unset")};
+  background-color: ${(props) => (props.active ? "rgba(0,0,0,0.4)" : "transparent")};
 
   .time {
     padding: 15px 0 15px 15px;
@@ -147,10 +153,10 @@ const StyledContainer = styled.div`
     color: white;
     cursor: default;
     transition: 0.4s;
-    background-color: ${(props) => (props.active ? "#fff" : "transparent")};
+    /* background-color: ${(props) => (props.active ? "#fff" : "transparent")}; */
 
     .time-time {
-      color: ${(props) => (props.active ? "#000" : "inherit")};
+      /* color: ${(props) => (props.active ? "#000" : "inherit")}; */
       font-size: 4rem;
       transition: 0.4s;
     }
@@ -207,7 +213,7 @@ const StyledContainer = styled.div`
   .rangeInput {
     flex-grow: 1;
     transition: 0.4s;
-    background-color: #fff;
+    /* background-color: #fff; */
     height: 100%;
     opacity: ${(props) => (props.active ? "1" : "0")};
     pointer-events: ${(props) => (props.active ? "all" : "none")};
@@ -218,15 +224,28 @@ const StyledContainer = styled.div`
     grid-template-rows: 1fr auto;
     align-items: center;
     padding: 0 25px;
+    padding-bottom: 5px;
 
     p {
+      color: white;
       font-size: 1.4rem;
       white-space: nowrap;
     }
 
     .MuiSlider-root {
+      width: 99%;
       grid-area: 2 / 1 / 2 / 3;
-      color: #ffaa00;
+      color: #fff;
+
+      .MuiSlider-markLabel {
+        color: inherit;
+        font-size: 1.2rem;
+      }
+
+      .MuiSlider-markLabelActive {
+        color: inherit;
+        font-size: 1.2rem;
+      }
     }
   }
 `;

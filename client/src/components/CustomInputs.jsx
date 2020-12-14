@@ -110,7 +110,7 @@ const StyledContainedButton = styled(Button)`
   text-transform: capitalize;
   white-space: nowrap;
   /* height: 100%; */
-  border-color: ${(props) => props.border_color ?? "rgba(0, 0, 0, 0.23)"};
+  border-color: ${(props) => props.text_color ?? "rgba(0, 0, 0, 0.23)"};
 
   &:hover {
     background-color: transparent;
