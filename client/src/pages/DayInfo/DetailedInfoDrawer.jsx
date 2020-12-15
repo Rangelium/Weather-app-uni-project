@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import AnimatedNumber from "animated-number-react";
+import dayjs from "dayjs";
 
 import { CustomButton } from "../../components/CustomInputs";
 import { Divider } from "@material-ui/core";
-
-// import HeaderText from "./TextSvg.svg";
 
 export default class DetailedInfoDrawer extends Component {
   render() {
@@ -16,14 +15,47 @@ export default class DetailedInfoDrawer extends Component {
           <br />
           details
         </h1>
-        {/* <div className="header">
-          <HeaderText />
-        </div> */}
 
         <div className="details">
           <Divider />
           {this.props.data && (
             <>
+              <div className="details-item">
+                <p>
+                  Date:
+                  <span>
+                    {dayjs(this.props.data.dateMeasurement).format("MMMM D, YYYY")}
+                  </span>
+                </p>
+              </div>
+              <div className="details-item">
+                <p>
+                  Time:
+                  <AnimatedNumber
+                    className="time-time"
+                    value={parseInt(this.props.data.timeMeasurement.slice(0, 2))}
+                    formatValue={(value) => value.toFixed(0)}
+                  />
+                  <span className="time-time colon">:</span>
+                  <AnimatedNumber
+                    className="time-time"
+                    value={parseInt(this.props.data.timeMeasurement.slice(3, 5))}
+                    formatValue={(value) => {
+                      if (this.props.data.timeMeasurement.slice(3, 5)[0] === "0") {
+                        return value.toFixed(0).length !== 2
+                          ? "0" + value.toFixed(0)
+                          : value.toFixed(0);
+                      } else if (this.props.data.timeMeasurement.slice(3, 5)[1] === "0") {
+                        return value.toFixed(0).length !== 2
+                          ? value.toFixed(0) + "0"
+                          : value.toFixed(0);
+                      } else {
+                        return value.toFixed(0);
+                      }
+                    }}
+                  />
+                </p>
+              </div>
               <div className="details-item">
                 <p>
                   Temperature:
@@ -142,9 +174,6 @@ const StyledDrawer = styled.div`
     font-size: 3.2rem;
     text-align: center;
   }
-  .header {
-    padding-top: 10px;
-  }
 
   .details {
     overflow-y: auto;
@@ -186,14 +215,21 @@ const StyledDrawer = styled.div`
 
     .details-item {
       p {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         color: rgba(255, 255, 255, 0.7);
 
         span {
           margin-left: 5px;
-          font-size: 1.6rem;
+          font-size: 1.4rem;
           color: white;
         }
+      }
+
+      .time-time:not(:first-child) {
+        margin-left: 0;
+      }
+      .time-time.colon {
+        margin: 0 2px;
       }
     }
   }

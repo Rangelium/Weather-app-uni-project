@@ -6,11 +6,17 @@ import TimeSelect from "./TimeSelect";
 import DayInfoFooter from "./DayInfoFooter";
 
 export default class DayInfo extends Component {
-  state = {
-    backgroundDayURL: null,
-    backgroundEveningURL: null,
-    dayMode: null,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      backgroundDayURL: null,
+      backgroundEveningURL: null,
+      dayMode: null,
+    };
+
+    this.timeSelectRef = React.createRef();
+  }
 
   componentDidMount() {
     this.setBackground(this.props.showInfo.timeMeasurement);
@@ -45,6 +51,7 @@ export default class DayInfo extends Component {
     return (
       <StyledPage>
         <TimeSelect
+          ref={this.timeSelectRef}
           data={this.props.showInfo}
           fullData={this.props.dateData}
           chageShowInfo={this.props.changeShowInfo}
@@ -86,6 +93,10 @@ const StyledPage = styled.section`
   grid-template-columns: 70% 1fr;
   grid-template-rows: auto 1fr auto;
 
+  > * {
+    z-index: 1;
+  }
+
   .bg_1fs5x {
     position: absolute;
     top: 0;
@@ -96,7 +107,7 @@ const StyledPage = styled.section`
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
-    z-index: -1;
+    z-index: 0;
 
     filter: brightness(70%);
   }

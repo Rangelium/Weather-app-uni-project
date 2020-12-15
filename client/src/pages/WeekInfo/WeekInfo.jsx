@@ -6,20 +6,20 @@ import WeekCards from "./WeekCards/WeekCards";
 import WeekTable from "./WeekTable";
 
 const variants = {
-  open: (height = 1000) => ({
-    clipPath: `circle(${height * 2 + 200}px at 100% 100%)`,
+  open: {
+    clipPath: `circle(2200px at 50% 50%)`,
     transition: {
       type: "spring",
       stiffness: 20,
       restDelta: 2,
     },
-  }),
+  },
   closed: {
-    clipPath: "circle(1px at 100% 100%)",
+    clipPath: `circle(0px at 50% 50%)`,
     transition: {
       // delay: 0.5,
       type: "spring",
-      stiffness: 200,
+      stiffness: 300,
       damping: 40,
     },
   },
@@ -35,11 +35,12 @@ export default class WeekInfo extends Component {
         variants={variants}
       >
         <WeekCards
+          changeDay={this.props.changeDay}
           showInfo={this.props.showInfo}
           closeWeekInfo={this.props.closeWeekInfo}
           IconsForWeather={this.props.IconsForWeather}
         />
-        <WeekTable />
+        <WeekTable tableData={this.props.dateData} showInfo={this.props.showInfo} />
       </StyledPage>
     );
   }

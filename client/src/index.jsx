@@ -22,6 +22,7 @@ const GlobalStyles = createGlobalStyle`
     height: 100vh;
     overflow: hidden;
     position: relative;
+    /* background-color: #e8eef3; */
   }
 
   a:visited{

@@ -10,21 +10,17 @@ export default class DayInfoFooter extends Component {
         <StyledWidget>
           <AnimatedNumber
             className="temp"
-            value={this.props.data?.temperature}
+            value={this.props.data.temperature}
             formatValue={(value) => `${value.toFixed(0)}°`}
           />
           <div className="info">
             <p>Azerbaijan, Baku</p>
             <div className="small-info">
               <div className="box">
-                <p>{dayjs(this.props.data?.dateMeasurement).format("MMMM D, YYYY")}</p>
-                <p>
-                  {this.props.data
-                    ? `${this.props.data.weatherDescription}`
-                    : "Loading..."}
-                </p>
+                <p>{dayjs(this.props.data.dateMeasurement).format("MMMM D, YYYY")}</p>
+                <p>{this.props.data.weatherDescription}</p>
               </div>
-              {this.props.IconsForWeather[this.props.data?.weatherDescription]}
+              {this.props.IconsForWeather[this.props.data.weatherDescription]}
             </div>
           </div>
         </StyledWidget>
@@ -71,9 +67,9 @@ const StyledWidget = styled.div`
       }
 
       svg {
-        font-size: 6rem;
+        font-size: 5rem;
         margin-bottom: -25px;
-        margin-top: -20px;
+        margin-top: -10px;
         margin-left: 10px;
       }
     }

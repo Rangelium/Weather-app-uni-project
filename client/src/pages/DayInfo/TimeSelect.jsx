@@ -10,9 +10,10 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 export default class TimeSelect extends Component {
   state = {
+    date: new Date(),
     active: false,
     marks: null,
-    selectedValue: 0,
+    timeSliderValue: 0,
 
     activeChanged: false,
     showNotifier: false,
@@ -22,6 +23,8 @@ export default class TimeSelect extends Component {
     if (!this.props.data) return;
     this.prepareSliderData();
 
+    this.timer = setInterval(() => this.setState({ date: new Date() }), 1000);
+
     setTimeout(() => {
       if (!this.state.activeChanged) {
         this.setState({
@@ -30,11 +33,19 @@ export default class TimeSelect extends Component {
       }
     }, 5000);
   }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
   handleSliderChange(e, newVal) {
     this.state.marks.forEach((mark, i) => {
       if (mark.value === newVal) {
         if (mark._data.timeMeasurement === this.props.data.timeMeasurement) return;
         this.props.chageShowInfo(mark._data);
+
+        const step = parseInt(100 / (this.props.fullData.length - 1));
+        this.setState({
+          timeSliderValue: step * i,
+        });
       }
     });
   }
@@ -42,17 +53,17 @@ export default class TimeSelect extends Component {
     let data = [...this.props.fullData];
     data.reverse();
     let marks = [];
-    let selectedValue = 0;
+    let timeSliderValue = 0;
 
     const step = parseInt(100 / (data.length - 1));
 
     data.forEach((el, i) => {
       if (el.timeMeasurement === this.props.data.timeMeasurement) {
-        selectedValue = parseInt(step * i);
+        timeSliderValue = step * i;
       }
       marks.push({
         label: el.timeMeasurement.slice(0, 5),
-        value: parseInt(step * i),
+        value: step * i,
         _data: el,
       });
     });
@@ -62,7 +73,7 @@ export default class TimeSelect extends Component {
 
     this.setState({
       marks,
-      selectedValue,
+      timeSliderValue,
     });
   }
 
@@ -85,29 +96,11 @@ export default class TimeSelect extends Component {
             }
           }}
         >
-          <AnimatedNumber
-            className="time-time"
-            value={parseInt(this.props.data.timeMeasurement.slice(0, 2))}
-            formatValue={(value) => value.toFixed(0)}
-          />
+          <span className="time-time">{this.state.date.getHours()}</span>
           <span className="time-time colon">:</span>
-          <AnimatedNumber
-            className="time-time"
-            value={parseInt(this.props.data.timeMeasurement.slice(3, 5))}
-            formatValue={(value) => {
-              if (this.props.data.timeMeasurement.slice(3, 5)[0] === "0") {
-                return value.toFixed(0).length !== 2
-                  ? "0" + value.toFixed(0)
-                  : value.toFixed(0);
-              } else if (this.props.data.timeMeasurement.slice(3, 5)[1] === "0") {
-                return value.toFixed(0).length !== 2
-                  ? value.toFixed(0) + "0"
-                  : value.toFixed(0);
-              } else {
-                return value.toFixed(0);
-              }
-            }}
-          />
+          <span className="time-time">
+            {this.state.date.toLocaleTimeString().split(":")[1]}
+          </span>
         </div>
 
         <div className="notifier">
@@ -127,7 +120,8 @@ export default class TimeSelect extends Component {
           {this.state.marks && (
             <Slider
               disabled={!this.state.active}
-              defaultValue={this.state.selectedValue}
+              // defaultValue={this.state.selectedValue}
+              value={this.state.timeSliderValue}
               onChange={this.handleSliderChange.bind(this)}
               step={null}
               valueLabelDisplay="off"
@@ -176,6 +170,16 @@ const StyledContainer = styled.div`
       top: -3px;
       font-size: 4.2rem;
       margin: 0 5px;
+      animation: blink 1s ease-in-out infinite;
+
+      @keyframes blink {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     }
   }
 
