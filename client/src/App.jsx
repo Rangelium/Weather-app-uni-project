@@ -6,7 +6,6 @@ import api from "./tools/connect";
 
 import DayInfo from "./pages/DayInfo/DayInfo";
 import WeekInfo from "./pages/WeekInfo/WeekInfo";
-import { Backdrop } from "@material-ui/core";
 
 // Icons
 import { FaCloud } from "react-icons/fa";
@@ -44,6 +43,7 @@ export default class App extends Component {
     };
 
     this.DayInfoRef = React.createRef();
+    this.WeekInfoRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -106,6 +106,10 @@ export default class App extends Component {
     });
   }
   async getDayData(date) {
+    if (date === this.state.showInfo.dateMeasurement) {
+      this.context.error("Already selected");
+      return;
+    }
     this.setState({
       loading: true,
     });
@@ -114,6 +118,8 @@ export default class App extends Component {
       this.context.error(err.message);
     });
     const showInfo = this.giveNearestToCurrentDateInfo(dateData);
+
+    this.WeekInfoRef.current.prepareTableData(dateData);
 
     this.setState(
       {
@@ -144,6 +150,7 @@ export default class App extends Component {
               loaded={() => this.setState({ loading: true })}
             />
             <WeekInfo
+              ref={this.WeekInfoRef}
               showInfo={this.state.showInfo}
               dateData={this.state.dateData}
               IconsForWeather={IconsForWeather}
@@ -186,14 +193,21 @@ export default class App extends Component {
 //                                              STYLES
 // ===============================================================================================================================
 
-const StyledBackdrop = styled(Backdrop)`
+const StyledBackdrop = styled.div`
   --bg: rgb(239, 239, 239);
   /* --bg: rgba */
   --stroke: #797b7c;
 
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: ${(props) => (props.open ? "all" : "none")};
+  opacity: ${(props) => (props.open ? "1" : "0")};
   z-index: 10000000;
   transition-duration: 0.6s;
-  background-color: var(--bg);
+  background-color: rgb(239, 239, 239, 0.8);
 
   svg {
     position: absolute;
@@ -209,7 +223,8 @@ const StyledBackdrop = styled(Backdrop)`
     fill: var(--stroke);
     /* stroke: var(--stroke); */
 
-    animation-name: ${(props) => (props.open ? "rotate" : "unset")};
+    /* animation-name: ${(props) => (props.open ? "rotate" : "unset")}; */
+    animation-name: "rotate";
     animation-duration: 10000ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
@@ -227,6 +242,7 @@ const StyledBackdrop = styled(Backdrop)`
 
   #cloudsSVG {
     top: calc(50% - 70px);
+    left: 50%;
 
     transform: scale(10);
     stroke: var(--stroke);
@@ -253,7 +269,7 @@ const StyledBackdrop = styled(Backdrop)`
       margin-left: 4px;
       border-radius: 0px 0px 6px 6px;
 
-      animation-name: drop;
+      animation-name: "drop";
       animation-duration: 450ms;
       animation-iteration-count: infinite;
       &:nth-child(1) {

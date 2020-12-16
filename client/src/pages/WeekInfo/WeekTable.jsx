@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import uuid from "react-uuid";
-import dayjs from "dayjs";
 
 import {
   Paper,
@@ -11,49 +10,125 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TableSortLabel,
+  Backdrop,
+  CircularProgress,
 } from "@material-ui/core";
 
+const headCells = [
+  { id: "dateMeasurement", label: "Date" },
+  { id: "timeMeasurement", label: "Time", noSort: true },
+  { id: "temperature", label: "Temperature" },
+  { id: "windSpeed", label: "Wind speed" },
+  { id: "weatherDescription", label: "Weather", noSort: true },
+  { id: "precipitation", label: "Precipitation" },
+  { id: "humidity", label: "Humidity" },
+  { id: "airPressure", label: "Air pressure" },
+  { id: "UVindex", label: "UVindex" },
+];
+
 export default class WeekTable extends Component {
+  state = {
+    activeCellId: "timeMeasurement",
+    sortDirection: "asc",
+  };
+
+  handleSort(cellId, sortDirection) {
+    let arrCopy = [...this.props.tableData];
+    arrCopy.sort((a, b) => {
+      let keyA = parseFloat(a[cellId]);
+      let keyB = parseFloat(b[cellId]);
+
+      if (cellId === "dateMeasurement" || cellId === "timeMeasurement") {
+        keyA = Date.parse(`${a.dateMeasurement} ${a.timeMeasurement}`);
+        keyB = Date.parse(`${b.dateMeasurement} ${b.timeMeasurement}`);
+      }
+
+      if (sortDirection === "desc") {
+        return keyB - keyA;
+      }
+      return keyA - keyB;
+    });
+
+    return arrCopy;
+  }
+  handleHeadCellClick(activeCellId) {
+    if (activeCellId === this.state.activeCellId) {
+      const sortDirection = this.state.sortDirection === "asc" ? "desc" : "asc";
+      this.setState({
+        sortDirection,
+      });
+      return;
+    }
+
+    this.setState({
+      activeCellId,
+      sortDirection: "asc",
+    });
+  }
+
   render() {
     return (
-      <StyledContainer>
+      <StyledContainer
+        cardsContainerHeight={
+          this.props.weekCardsRef.current?.cardsContainerRef.current.offsetHeight
+        }
+        enlargeTable={this.props.enlargeTable}
+      >
         <StyledTableContainer component={Paper}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Time</TableCell>
-                <TableCell align="center" title="Temperature">
-                  Temperature
-                </TableCell>
-                <TableCell align="center">Wind speed</TableCell>
-                <TableCell align="center">Weather</TableCell>
-                <TableCell align="center">Precipitation</TableCell>
-                <TableCell align="center">Humidity</TableCell>
-                <TableCell align="center">Air pressure</TableCell>
-                <TableCell align="center">UVindex</TableCell>
+                {headCells.map(({ id, label, noSort }) =>
+                  !noSort ? (
+                    <TableCell key={id} align="center">
+                      <TableSortLabel
+                        active={id === this.state.activeCellId}
+                        direction={this.state.sortDirection}
+                        onClick={() => this.handleHeadCellClick(id)}
+                      >
+                        {label}
+                      </TableSortLabel>
+                    </TableCell>
+                  ) : (
+                    <TableCell key={id} align="center">
+                      {label}
+                    </TableCell>
+                  )
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.props.tableData.map((el) => (
-                <TableRow key={uuid()}>
-                  <TableCell align="center">{`${el.dateMeasurement}`}</TableCell>
-                  <TableCell align="center">{`${el.timeMeasurement.slice(
-                    0,
-                    5
-                  )}`}</TableCell>
-                  <TableCell align="center">{`${el.temperature}°C`}</TableCell>
-                  <TableCell align="center">{`${el.windSpeed}km/h`}</TableCell>
-                  <TableCell align="center">{`${el.weatherDescription}`}</TableCell>
-                  <TableCell align="center">{`${el.precipitation}%`}</TableCell>
-                  <TableCell align="center">{`${el.humidity}%`}</TableCell>
-                  <TableCell align="center">{`${el.airPressure}mb`}</TableCell>
-                  <TableCell align="center">{`${el.UVindex}`}</TableCell>
-                </TableRow>
-              ))}
+              {this.handleSort(this.state.activeCellId, this.state.sortDirection).map(
+                (el) => (
+                  <TableRow key={uuid()}>
+                    <TableCell align="center">{`${el.dateMeasurement}`}</TableCell>
+                    <TableCell align="center">
+                      {`${el.timeMeasurement.slice(0, 5)}`}
+                    </TableCell>
+                    <TableCell align="center">{`${el.temperature} °C`}</TableCell>
+                    <TableCell align="center">{`${el.windSpeed} km/h`}</TableCell>
+                    <TableCell align="center">{`${el.weatherDescription}`}</TableCell>
+                    <TableCell align="center">{`${el.precipitation} %`}</TableCell>
+                    <TableCell align="center">{`${el.humidity} %`}</TableCell>
+                    <TableCell align="center">{`${el.airPressure}mb`}</TableCell>
+                    <TableCell align="center">{`${el.UVindex}`}</TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
           </Table>
         </StyledTableContainer>
+        <Backdrop
+          style={{
+            zIndex: 1000,
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+          }}
+          open={this.props.tableLoading}
+        >
+          <CircularProgress style={{ color: "#fff" }} />
+        </Backdrop>
       </StyledContainer>
     );
   }
@@ -64,10 +139,16 @@ export default class WeekTable extends Component {
 // ===============================================================================================================================
 
 const StyledContainer = styled.div`
+  position: relative;
   overflow: hidden;
   padding-top: 5px;
   padding-bottom: 10px;
   padding: 5px 20px 10px 20px;
+
+  transition: 0.4s margin-top;
+  z-index: 10;
+  margin-top: ${(props) =>
+    props.enlargeTable ? `-${props.cardsContainerHeight}px` : "0"};
 `;
 
 const StyledTableContainer = styled(TableContainer)`

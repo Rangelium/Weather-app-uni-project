@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import uuid from "react-uuid";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { GlobalDataContext } from "../../../components/GlobalDataProvider";
 import api from "../../../tools/connect";
 
@@ -74,23 +73,42 @@ export default class WeekCards extends Component {
             <ChevronLeftIcon />
           </IconButton>
           <h1>Days of week:</h1>
-          <CustomButton onClick={() => alert("SOON")}>Enlarge table</CustomButton>
+          <CustomButton onClick={this.props.handleEnlargeTable}>
+            {this.props.enlargeTable ? "Reduce table" : "Enlarge table"}
+          </CustomButton>
         </div>
 
         <div className="cards" ref={this.cardsContainerRef}>
           {this.state.data.map((dateDataArr) => {
+            const dateDataArrSortedByTempASC = [...dateDataArr].sort(
+              (a, b) => a.temperature - b.temperature
+            );
+
             return (
               <Card
-                handleClick={() => this.props.changeDay(dateDataArr[0].dateMeasurement)}
-                key={uuid()}
+                key={dateDataArr[0].dateMeasurement}
+                tableLoading={this.props.tableLoading}
+                tableInfoAdded={this.props.addedDates.includes(
+                  dateDataArr[0].dateMeasurement
+                )}
+                addTableData={() =>
+                  this.props.addTableData(dateDataArr[0].dateMeasurement)
+                }
+                removeTableData={() =>
+                  this.props.removeTableData(dateDataArr[0].dateMeasurement)
+                }
+                handleClick={() =>
+                  this.props.changeDay(
+                    dateDataArr[parseInt(dateDataArr.length / 2)].dateMeasurement
+                  )
+                }
                 cardsDate={dateDataArr[0].dateMeasurement}
+                dayData={dateDataArr[0]}
                 cardData={{
-                  nameBig: dayjs(dateDataArr[0].dateMeasurement).format("dddd"),
-                  nameSmall: dayjs(dateDataArr[0].dateMeasurement).format("MMMM DD"),
                   icon: this.props.IconsForWeather[dateDataArr[0].weatherDescription],
                   temperature: [
-                    dateDataArr[0].temperature,
-                    dateDataArr[dateDataArr.length - 1].temperature,
+                    dateDataArrSortedByTempASC[0].temperature,
+                    dateDataArrSortedByTempASC[dateDataArr.length - 1].temperature,
                   ],
                   isActive:
                     dateDataArr[0].dateMeasurement ===
@@ -123,8 +141,11 @@ const StyledContainer = styled.div`
   .header {
     display: flex;
     align-items: center;
+    padding-top: 6px;
 
     .MuiIconButton-root {
+      padding: 6px;
+
       &:hover {
         .MuiSvgIcon-root {
           color: #000;
@@ -133,7 +154,7 @@ const StyledContainer = styled.div`
 
       .MuiSvgIcon-root {
         transform: scale(2);
-        font-size: 2rem;
+        font-size: 1.8rem;
         position: relative;
         right: 1px;
         transition: 0.3s;
@@ -142,6 +163,7 @@ const StyledContainer = styled.div`
 
     h1 {
       flex-grow: 1;
+      font-size: 1.6rem;
     }
   }
 
@@ -153,7 +175,8 @@ const StyledContainer = styled.div`
     grid-template-columns: repeat(6, 1fr);
     overflow-x: auto;
     overflow-y: hidden;
-    grid-gap: 12px;
+    grid-gap: 10px;
+    justify-items: center;
     /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */
 
     &::-webkit-scrollbar {
