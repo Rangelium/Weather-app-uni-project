@@ -15,16 +15,22 @@ import {
   WiSnow,
   WiRain,
   WiNightFog,
-  WiCloudyWindy,
+  WiThunderstorm,
+  WiShowers,
+  WiDayHaze,
+  WiStrongWind,
 } from "react-icons/wi";
 
 const IconsForWeather = {
-  Sunny: <WiDaySunny />,
-  Cloudly: <WiCloudy />,
-  Windy: <WiCloudyWindy />,
-  Snowy: <WiSnow />,
-  Rainy: <WiRain />,
-  Foggy: <WiNightFog />,
+  Thunderstorm: <WiThunderstorm />,
+  Drizzle: <WiShowers />,
+  Rain: <WiRain />,
+  Snow: <WiSnow />,
+  Clouds: <WiCloudy />,
+  Clear: <WiDaySunny />,
+  Fog: <WiNightFog />,
+  Haze: <WiDayHaze />,
+  Squall: <WiStrongWind />,
 };
 
 export default class App extends Component {
@@ -70,11 +76,6 @@ export default class App extends Component {
       `${dateData[0].dateMeasurement} H${date.getHours()}:${date.getMinutes()}:00`
     ).unix();
 
-    // console.log(
-    //   `${dateData[0].dateMeasurement} H${date.getHours()}:${date.getMinutes()}:00`
-    // );
-    // console.log(`Timestamp: ${timestamp}`);
-
     let closestIndex;
     let lowestDiffence = Infinity;
     dateData.forEach((data, i) => {
@@ -84,10 +85,6 @@ export default class App extends Component {
       let tmpDifference = Math.abs(timestamp - dataTimestamp);
 
       if (tmpDifference < lowestDiffence) {
-        // console.log(
-        //   `\nTimestamp from data: ${dataTimestamp}\nDate: ${data.dateMeasurement} H${data.timeMeasurement}`
-        // );
-        // console.log(`Difference: ${tmpDifference}`);
         lowestDiffence = tmpDifference;
         closestIndex = i;
       }

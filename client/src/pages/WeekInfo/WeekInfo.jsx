@@ -10,7 +10,7 @@ import WeekTable from "./WeekTable";
 const variants = {
   open: {
     // clipPath: `circle(2200px at 50% 50%)`,
-    clipPath: `circle(2200px at 85% 90%)`,
+    clipPath: `circle(2200px at 100% 100%)`,
     transition: {
       type: "spring",
       stiffness: 20,
@@ -19,7 +19,7 @@ const variants = {
   },
   closed: {
     // clipPath: `circle(0px at 50% 50%)`,
-    clipPath: `circle(0px at 85% 90%)`,
+    clipPath: `circle(0px at 100% 100%)`,
     transition: {
       // delay: 0.5,
       type: "spring",

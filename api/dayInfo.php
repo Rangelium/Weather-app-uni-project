@@ -1,4 +1,6 @@
 <?php
+
+header("Content-Type: application/json");
 // ! For developing ony
 header("Access-Control-Allow-Origin: http://localhost:9000");
 

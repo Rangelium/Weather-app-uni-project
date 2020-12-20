@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost/test/api";
+axios.defaults.baseURL = "http://localhost/backendProject/api";
 
 const timeoutDelay = 30000;
 class API {
@@ -26,11 +26,33 @@ class API {
     });
   }
 
-  getNearDatesInfo(date) {
+  getPrevDatesInfo() {
     return new Promise(async (resolve, reject) => {
       let res = await axios({
         method: "GET",
-        url: `/weekInfo.php?date=${date}`,
+        url: `/prevDatesInfo.php`,
+        timeout: timeoutDelay,
+      }).catch((err) => {
+        console.log(err);
+        return { error: err };
+      });
+
+      if (res) {
+        if (res.error) {
+          reject(res);
+        } else {
+          resolve(res.data);
+        }
+        return;
+      }
+    });
+  }
+
+  getNextDatesInfo() {
+    return new Promise(async (resolve, reject) => {
+      let res = await axios({
+        method: "GET",
+        url: `/nextDatesInfo.php`,
         timeout: timeoutDelay,
       }).catch((err) => {
         console.log(err);

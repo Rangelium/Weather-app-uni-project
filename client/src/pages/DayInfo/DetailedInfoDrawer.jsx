@@ -22,45 +22,19 @@ export default class DetailedInfoDrawer extends Component {
             <>
               <div className="details-item">
                 <p>
-                  Date:
-                  <span>
-                    {dayjs(this.props.data.dateMeasurement).format("MMMM D, YYYY")}
-                  </span>
-                </p>
-              </div>
-              <div className="details-item">
-                <p>
-                  Time:
-                  <AnimatedNumber
-                    className="time-time"
-                    value={parseInt(this.props.data.timeMeasurement.slice(0, 2))}
-                    formatValue={(value) => value.toFixed(0)}
-                  />
-                  <span className="time-time colon">:</span>
-                  <AnimatedNumber
-                    className="time-time"
-                    value={parseInt(this.props.data.timeMeasurement.slice(3, 5))}
-                    formatValue={(value) => {
-                      if (this.props.data.timeMeasurement.slice(3, 5)[0] === "0") {
-                        return value.toFixed(0).length !== 2
-                          ? "0" + value.toFixed(0)
-                          : value.toFixed(0);
-                      } else if (this.props.data.timeMeasurement.slice(3, 5)[1] === "0") {
-                        return value.toFixed(0).length !== 2
-                          ? value.toFixed(0) + "0"
-                          : value.toFixed(0);
-                      } else {
-                        return value.toFixed(0);
-                      }
-                    }}
-                  />
-                </p>
-              </div>
-              <div className="details-item">
-                <p>
                   Temperature:
                   <AnimatedNumber
                     value={this.props.data.temperature}
+                    formatValue={(value) => value.toFixed(0)}
+                  />
+                  <span>°C</span>
+                </p>
+              </div>
+              <div className="details-item">
+                <p>
+                  Feels like:
+                  <AnimatedNumber
+                    value={this.props.data.tempFeelsLike}
                     formatValue={(value) => value.toFixed(0)}
                   />
                   <span>°C</span>
@@ -73,14 +47,14 @@ export default class DetailedInfoDrawer extends Component {
                     value={this.props.data.windSpeed}
                     formatValue={(value) => value.toFixed(0)}
                   />
-                  <span>km/h</span>
+                  <span>m/s</span>
                 </p>
               </div>
               <div className="details-item">
                 <p>
-                  Precipitation:
+                  Cloudiness:
                   <AnimatedNumber
-                    value={this.props.data.precipitation}
+                    value={this.props.data.cloudiness}
                     formatValue={(value) => value.toFixed(0)}
                   />
                   <span>%</span>
@@ -103,23 +77,27 @@ export default class DetailedInfoDrawer extends Component {
                     value={this.props.data.airPressure}
                     formatValue={(value) => value.toFixed(0)}
                   />
-                  <span>mb</span>
+                  <span>hPa</span>
                 </p>
               </div>
               <div className="details-item">
                 <p>
-                  UVindex:
+                  Visibility:
                   <AnimatedNumber
-                    value={this.props.data.UVindex}
+                    value={this.props.data.visibility}
                     formatValue={(value) => value.toFixed(0)}
                   />
-                  <span></span>
+                  <span>m</span>
                 </p>
               </div>
               <div className="details-item">
                 <p>
                   Weather:
-                  <span>{this.props.data.weatherDescription}</span>
+                  <span>
+                    {[...this.props.data.weatherDescription]
+                      .map((letter, i) => (i ? letter : letter.toUpperCase()))
+                      .join("")}
+                  </span>
                 </p>
               </div>
             </>

@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import AnimatedNumber from "animated-number-react";
 
 import { Slider } from "@material-ui/core";
-import { CustomButton } from "../../components/CustomInputs";
 
 // Icons
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -44,7 +42,7 @@ export default class TimeSelect extends Component {
 
         const step = parseInt(100 / (this.props.fullData.length - 1));
         this.setState({
-          timeSliderValue: step * i,
+          timeSliderValue: step * i === 99 ? 100 : step * i,
         });
       }
     });
@@ -55,8 +53,20 @@ export default class TimeSelect extends Component {
     let marks = [];
     let timeSliderValue = 0;
 
-    const step = parseInt(100 / (data.length - 1));
+    if (data.length === 1) {
+      marks.push({
+        label: data[0].timeMeasurement.slice(0, 5),
+        value: 0,
+        _data: data[0],
+      });
+      this.setState({
+        marks,
+        timeSliderValue,
+      });
+      return;
+    }
 
+    const step = parseInt(100 / (data.length - 1));
     data.forEach((el, i) => {
       if (el.timeMeasurement === this.props.data.timeMeasurement) {
         timeSliderValue = step * i;
@@ -110,13 +120,6 @@ export default class TimeSelect extends Component {
 
         <div className="rangeInput">
           <p>Select which time to show</p>
-          <CustomButton
-            text_color="#fff"
-            disabled={!this.state.active}
-            onClick={() => alert("SOON")}
-          >
-            Add new
-          </CustomButton>
           {this.state.marks && (
             <Slider
               disabled={!this.state.active}

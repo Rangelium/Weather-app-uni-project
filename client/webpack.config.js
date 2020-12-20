@@ -47,7 +47,7 @@ function createConfig(env) {
     config.plugins.push(
       new BrowserSyncPlugin({
         // use existing Apache virtual host
-        proxy: "http://localhost/test/",
+        proxy: "http://localhost/backendProject/",
         port: 9000,
         // tunnel: true,
         // watch the built files and the index file

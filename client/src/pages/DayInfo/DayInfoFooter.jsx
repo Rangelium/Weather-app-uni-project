@@ -20,7 +20,7 @@ export default class DayInfoFooter extends Component {
                 <p>{dayjs(this.props.data.dateMeasurement).format("MMMM D, YYYY")}</p>
                 <p>{this.props.data.weatherDescription}</p>
               </div>
-              {this.props.IconsForWeather[this.props.data.weatherDescription]}
+              {this.props.IconsForWeather[this.props.data.weatherMain]}
             </div>
           </div>
         </StyledWidget>

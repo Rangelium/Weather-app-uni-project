@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 import { GlobalDataContext } from "../../../components/GlobalDataProvider";
 import api from "../../../tools/connect";
 
-import Card from "./Card";
+import { PrevDateCard, NextDateCard } from "./Card";
 import { CustomButton } from "../../../components/CustomInputs";
 import { IconButton } from "@material-ui/core";
 
@@ -17,28 +17,35 @@ export default class WeekCards extends Component {
     super();
 
     this.state = {
-      data: [],
+      prevDatesData: [],
+      nextDatesData: [],
     };
 
     this.cardsContainerRef = React.createRef();
   }
 
   async componentDidMount() {
-    const data = await api
-      .getNearDatesInfo(this.props.showInfo.dateMeasurement)
+    const prevDatesData = await api
+      .getPrevDatesInfo(this.props.showInfo.dateMeasurement)
       .then((res) => this.prepareData(res))
       .catch((err) => this.context.error(err.message));
 
     let activeIndex;
-    data.forEach((dateDataArr, i) => {
+    prevDatesData.forEach((dateDataArr, i) => {
+      if (!dateDataArr.length) return;
       if (dateDataArr[0].dateMeasurement === this.props.showInfo.dateMeasurement) {
         activeIndex = i;
       }
     });
 
+    const nextDatesData = await api
+      .getNextDatesInfo(this.props.showInfo.dateMeasurement)
+      .catch((err) => this.context.error(err.message));
+
     this.setState(
       {
-        data,
+        prevDatesData,
+        nextDatesData,
       },
       () => {
         this.cardsContainerRef.current.childNodes[activeIndex].scrollIntoView({
@@ -49,7 +56,17 @@ export default class WeekCards extends Component {
     );
   }
   prepareData(givenData) {
-    const resArr = [...Array(6)].map(() => []);
+    // Calculate unique length
+    let uniqueLength = 0;
+    let tmp;
+    givenData.forEach((el) => {
+      if (el.dateMeasurement !== tmp) {
+        tmp = el.dateMeasurement;
+        uniqueLength++;
+      }
+    });
+
+    const resArr = [...Array(uniqueLength)].map(() => []);
 
     let index = 0;
     let curDate = givenData[0].dateMeasurement;
@@ -79,13 +96,15 @@ export default class WeekCards extends Component {
         </div>
 
         <div className="cards" ref={this.cardsContainerRef}>
-          {this.state.data.map((dateDataArr) => {
-            const dateDataArrSortedByTempASC = [...dateDataArr].sort(
-              (a, b) => a.temperature - b.temperature
+          {this.state.prevDatesData.map((dateDataArr) => {
+            const dateDataArrSortedByTimeASC = [...dateDataArr].sort(
+              (a, b) =>
+                dayjs(`${a.dateMeasurement} ${a.timeMeasurement}`).unix() -
+                dayjs(`${b.dateMeasurement} ${b.timeMeasurement}`).unix()
             );
 
             return (
-              <Card
+              <PrevDateCard
                 key={dateDataArr[0].dateMeasurement}
                 tableLoading={this.props.tableLoading}
                 tableInfoAdded={this.props.addedDates.includes(
@@ -105,10 +124,10 @@ export default class WeekCards extends Component {
                 cardsDate={dateDataArr[0].dateMeasurement}
                 dayData={dateDataArr[0]}
                 cardData={{
-                  icon: this.props.IconsForWeather[dateDataArr[0].weatherDescription],
+                  icon: this.props.IconsForWeather[dateDataArr[0].weatherMain],
                   temperature: [
-                    dateDataArrSortedByTempASC[0].temperature,
-                    dateDataArrSortedByTempASC[dateDataArr.length - 1].temperature,
+                    dateDataArrSortedByTimeASC[0].temperature,
+                    dateDataArrSortedByTimeASC[dateDataArr.length - 1].temperature,
                   ],
                   isActive:
                     dateDataArr[0].dateMeasurement ===
@@ -117,6 +136,13 @@ export default class WeekCards extends Component {
               />
             );
           })}
+          {this.state.nextDatesData.map((dateInfo) => (
+            <NextDateCard
+              key={dateInfo.dateMeasurement}
+              dateData={dateInfo}
+              icon={this.props.IconsForWeather[dateInfo.weatherDescription]}
+            />
+          ))}
         </div>
       </StyledContainer>
     );
@@ -171,11 +197,15 @@ const StyledContainer = styled.div`
     width: 100%;
     padding: 7px 5px;
     padding-bottom: 15px;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    /* display: grid;
+    grid-template-columns: repeat(6, 1fr); */
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 10px;
+
     overflow-x: auto;
     overflow-y: hidden;
-    grid-gap: 10px;
     justify-items: center;
     /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */
 

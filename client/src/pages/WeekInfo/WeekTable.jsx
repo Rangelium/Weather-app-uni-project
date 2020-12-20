@@ -19,18 +19,19 @@ const headCells = [
   { id: "dateMeasurement", label: "Date" },
   { id: "timeMeasurement", label: "Time", noSort: true },
   { id: "temperature", label: "Temperature" },
+  { id: "tempFeelsLike", label: "Feels like" },
   { id: "windSpeed", label: "Wind speed" },
-  { id: "weatherDescription", label: "Weather", noSort: true },
-  { id: "precipitation", label: "Precipitation" },
-  { id: "humidity", label: "Humidity" },
   { id: "airPressure", label: "Air pressure" },
-  { id: "UVindex", label: "UVindex" },
+  { id: "humidity", label: "Humidity" },
+  { id: "visibility", label: "Visibility" },
+  { id: "cloudiness", label: "Cloudiness" },
+  // { id: "weatherDescription", label: "Weather", noSort: true },
 ];
 
 export default class WeekTable extends Component {
   state = {
     activeCellId: "timeMeasurement",
-    sortDirection: "asc",
+    sortDirection: "desc",
   };
 
   handleSort(cellId, sortDirection) {
@@ -102,17 +103,23 @@ export default class WeekTable extends Component {
               {this.handleSort(this.state.activeCellId, this.state.sortDirection).map(
                 (el) => (
                   <TableRow key={uuid()}>
-                    <TableCell align="center">{`${el.dateMeasurement}`}</TableCell>
+                    <TableCell
+                      align="center"
+                      style={{ whiteSpace: "nowrap" }}
+                    >{`${el.dateMeasurement}`}</TableCell>
                     <TableCell align="center">
                       {`${el.timeMeasurement.slice(0, 5)}`}
                     </TableCell>
                     <TableCell align="center">{`${el.temperature} °C`}</TableCell>
-                    <TableCell align="center">{`${el.windSpeed} km/h`}</TableCell>
-                    <TableCell align="center">{`${el.weatherDescription}`}</TableCell>
-                    <TableCell align="center">{`${el.precipitation} %`}</TableCell>
+                    <TableCell align="center">{`${el.tempFeelsLike} °C`}</TableCell>
+                    <TableCell align="center">{`${el.windSpeed} m/s`}</TableCell>
+                    <TableCell align="center">{`${el.airPressure} hPa`}</TableCell>
                     <TableCell align="center">{`${el.humidity} %`}</TableCell>
-                    <TableCell align="center">{`${el.airPressure}mb`}</TableCell>
-                    <TableCell align="center">{`${el.UVindex}`}</TableCell>
+                    <TableCell align="center">{`${el.visibility} m`}</TableCell>
+                    <TableCell align="center">{`${el.cloudiness} %`}</TableCell>
+                    {/* <TableCell align="center">{`${[...el.weatherDescription]
+                      .map((l, i) => (i ? l : l.toUpperCase()))
+                      .join("")}`}</TableCell> */}
                   </TableRow>
                 )
               )}

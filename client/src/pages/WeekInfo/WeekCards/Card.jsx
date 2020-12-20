@@ -1,15 +1,28 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import dayjs from "dayjs";
 
 // Icons
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 
-export default class Card extends Component {
+export class PrevDateCard extends Component {
   render() {
     const data = this.props.cardData;
     const dayData = this.props.dayData;
+
+    if (this.props.noInfo) {
+      return (
+        <StyledCard empty>
+          <h1>No info</h1>
+          <p>
+            No info about
+            <br />
+            this day in database
+          </p>
+        </StyledCard>
+      );
+    }
 
     return (
       <StyledCard
@@ -35,6 +48,25 @@ export default class Card extends Component {
           </div>
           {data.icon}
           <p>{`${data.temperature[0]}° | ${data.temperature[1]}°`}</p>
+        </div>
+      </StyledCard>
+    );
+  }
+}
+
+export class NextDateCard extends Component {
+  render() {
+    const data = this.props.dateData;
+
+    return (
+      <StyledCard isActive={0} nextDate>
+        <div title="Click to change date" className="wrapper">
+          <div className="title">
+            <h1>{dayjs(data.dateMeasurement).format("dddd")}</h1>
+            <p>{dayjs(data.dateMeasurement).format("MMMM DD")}</p>
+          </div>
+          {this.props.icon}
+          <p>{`${data.tempMin}° | ${data.tempMax}°`}</p>
         </div>
       </StyledCard>
     );
@@ -119,4 +151,36 @@ const StyledCard = styled.div`
       font-size: 5rem;
     }
   }
+
+  ${(props) =>
+    props.nextDate
+      ? css`
+          cursor: default;
+          opacity: 0.7;
+
+          &:hover {
+            transform: unset;
+          }
+        `
+      : null}
+
+  ${(props) =>
+    props.empty
+      ? css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          opacity: 0.6;
+          cursor: default;
+
+          &:hover {
+            transform: unset;
+          }
+
+          h1 {
+          }
+        `
+      : null}
 `;
