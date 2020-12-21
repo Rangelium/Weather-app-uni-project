@@ -33,8 +33,8 @@ export default class DayInfo extends Component {
     });
   }
   giveBackgroundURL(time) {
-    const numDayImages = 2;
-    const numEveningImages = 1;
+    const numDayImages = 4;
+    const numEveningImages = 4;
 
     const eveningFileName = `evening_${
       Math.floor(Math.random() * numEveningImages) + 1

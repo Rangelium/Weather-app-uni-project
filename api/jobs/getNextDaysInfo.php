@@ -10,9 +10,12 @@ include_once './config/database.php';
 $database = new Database();
 $conn = $database->getConnection();
 
+// Include Tokens
+include_once './Tokens.php';
+
 // Get AccuWeather's 5 dat weather forecast
 $curl = curl_init();
-$url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/27103?apikey=F45NMDowQ6SiuOgnZKXT1ni0n0dS04XG&metric=true";
+$url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/27103?apikey=$AccuWeatherToken&metric=true";
 $result = file_get_contents($url);
 $APIdata = json_decode($result, true);
 

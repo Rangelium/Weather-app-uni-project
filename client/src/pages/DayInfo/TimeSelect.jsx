@@ -42,7 +42,7 @@ export default class TimeSelect extends Component {
 
         const step = parseInt(100 / (this.props.fullData.length - 1));
         this.setState({
-          timeSliderValue: step * i === 99 ? 100 : step * i,
+          timeSliderValue: step * i > 98 ? 100 : step * i,
         });
       }
     });
@@ -69,7 +69,7 @@ export default class TimeSelect extends Component {
     const step = parseInt(100 / (data.length - 1));
     data.forEach((el, i) => {
       if (el.timeMeasurement === this.props.data.timeMeasurement) {
-        timeSliderValue = step * i;
+        timeSliderValue = step * i > 98 ? 100 : step * i;
       }
       marks.push({
         label: el.timeMeasurement.slice(0, 5),

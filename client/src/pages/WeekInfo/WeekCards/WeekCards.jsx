@@ -196,7 +196,7 @@ const StyledContainer = styled.div`
   .cards {
     width: 100%;
     padding: 7px 5px;
-    padding-bottom: 15px;
+    padding-bottom: 20px;
     /* display: grid;
     grid-template-columns: repeat(6, 1fr); */
     display: flex;
@@ -210,7 +210,7 @@ const StyledContainer = styled.div`
     /* border-bottom: 1px solid rgba(0, 0, 0, 0.2); */
 
     &::-webkit-scrollbar {
-      height: 5px;
+      height: 8px;
     }
     /* Track */
     &::-webkit-scrollbar-track {
