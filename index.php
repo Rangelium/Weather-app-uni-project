@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;800&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
 
+  <link rel="shortcut icon" href="./client/assets/favicon.svg" type="image/x-icon">
   <title>Weather app</title>
 </head>
 <body>
