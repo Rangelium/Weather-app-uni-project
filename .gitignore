@@ -2,5 +2,6 @@
 /client/build
 
 /api/config/database.php
+/api/jobs/Tokens.php
 
 forHosting
