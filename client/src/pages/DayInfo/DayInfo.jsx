@@ -90,7 +90,7 @@ const StyledPage = styled.section`
   height: 100%;
   display: grid;
 
-  grid-template-columns: 70% 1fr;
+  grid-template-columns: 1fr 400px;
   grid-template-rows: auto 1fr auto;
 
   > * {
@@ -110,6 +110,10 @@ const StyledPage = styled.section`
     z-index: 0;
 
     filter: brightness(70%);
+  }
+
+  @media only screen and (max-width: 600px) {
+    grid-template-columns: 0 1fr;
   }
 `;
 const StyledDayBackground = styled.div`

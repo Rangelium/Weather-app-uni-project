@@ -20,6 +20,14 @@ export default class DetailedInfoDrawer extends Component {
           <Divider />
           {this.props.data && (
             <>
+              <div className="details-item date">
+                <p>
+                  Date:{" "}
+                  <span>
+                    {dayjs(this.props.data.dateMeasurement).format("MMMM D, YYYY")}
+                  </span>
+                </p>
+              </div>
               <div className="details-item">
                 <p>
                   Temperature:
@@ -210,6 +218,9 @@ const StyledDrawer = styled.div`
         margin: 0 2px;
       }
     }
+    .details-item.date {
+      display: none;
+    }
   }
 
   .footer {
@@ -240,6 +251,14 @@ const StyledDrawer = styled.div`
         &:hover {
           color: #ffaa00;
         }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .details {
+      .details-item.date {
+        display: block;
       }
     }
   }

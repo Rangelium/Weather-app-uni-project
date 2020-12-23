@@ -27,10 +27,10 @@ $url = "https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=40.38&lo
 $result = file_get_contents($url);
 $APIdataPrev = json_decode($result, true);
 
-
-// Delete all previous data about specified date
+// Delete all previous data about specified date and next date
 $APIcurrDate = date("yy-m-d", $APIdata["current"]["dt"]);
-if (!mysqli_query($conn, "DELETE FROM `weather` WHERE `dateMeasurement` = '$APIcurrDate'")) {
+$APInextDate = date("yy-m-d", $APIdata["current"]["dt"] + 86400);
+if (!mysqli_query($conn, "DELETE FROM `weather` WHERE `dateMeasurement` = '$APIcurrDate' OR `dateMeasurement` = '$APInextDate'")) {
   http_response_code(500);
   die(json_encode(array("error" => mysqli_error($conn))));
 }
@@ -83,7 +83,7 @@ foreach ($APIdata["hourly"] as &$hourData) {
     $hourTime = $hourData["dt"] + $APIdata["timezone_offset"] - 3600;
 
     // Prepare params for query
-    $req_date = date("yy-m-d", $hourData["dt"]);
+    $req_date = date("yy-m-d", $hourData["dt"] + $APIdata["timezone_offset"]);
     $req_time = date("H:i:s", $hourTime);
     $req_temp = $hourData["temp"];
     $req_tempFeelsLike = $hourData["feels_like"];
@@ -111,7 +111,7 @@ foreach ($APIdata["hourly"] as &$hourData) {
 
 http_response_code(200);
 if ($addedData != 0) {
-  die(json_encode(array("success" => "Added $addedData rows")));
+  die(json_encode(array("success" => "Added $addedData rows", "addedDate" => "$req_date", "removedDate" => "$APIcurrDate")));
 } else {
   die(json_encode(array("success" => "Nothing added")));
 }

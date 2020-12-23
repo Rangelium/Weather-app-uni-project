@@ -18,7 +18,11 @@ export default class DayInfoFooter extends Component {
             <div className="small-info">
               <div className="box">
                 <p>{dayjs(this.props.data.dateMeasurement).format("MMMM D, YYYY")}</p>
-                <p>{this.props.data.weatherDescription}</p>
+                <p>
+                  {[...this.props.data.weatherDescription]
+                    .map((l, i) => (i ? l : l.toUpperCase()))
+                    .join("")}
+                </p>
               </div>
               {this.props.IconsForWeather[this.props.data.weatherMain]}
             </div>
@@ -62,6 +66,7 @@ const StyledWidget = styled.div`
 
       .box {
         > p {
+          white-space: nowrap;
           font-size: 1.2rem;
         }
       }
@@ -73,5 +78,18 @@ const StyledWidget = styled.div`
         margin-left: 10px;
       }
     }
+  }
+
+  @media only screen and (max-width: 800px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    svg {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    display: none;
   }
 `;

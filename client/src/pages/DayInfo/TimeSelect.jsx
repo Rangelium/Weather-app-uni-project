@@ -265,4 +265,24 @@ const StyledContainer = styled.div`
       }
     }
   }
+
+  @media only screen and (max-width: 910px) {
+    .notifier {
+      display: none;
+    }
+
+    .rangeInput {
+      p {
+        display: none;
+      }
+
+      .MuiSlider-root {
+        display: none;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
 `;

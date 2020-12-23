@@ -89,7 +89,7 @@ export default class WeekCards extends Component {
           <IconButton title="Go back" onClick={this.props.closeWeekInfo}>
             <ChevronLeftIcon />
           </IconButton>
-          <h1>Days of week:</h1>
+          <h1>Days:</h1>
           <CustomButton onClick={this.props.handleEnlargeTable}>
             {this.props.enlargeTable ? "Reduce table" : "Enlarge table"}
           </CustomButton>
@@ -224,6 +224,14 @@ const StyledContainer = styled.div`
       border-radius: 10px;
       background: #d7d8d6;
       box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    grid-template-columns: 10px 1fr 10px;
+
+    .cards {
+      padding-bottom: 10px;
     }
   }
 `;

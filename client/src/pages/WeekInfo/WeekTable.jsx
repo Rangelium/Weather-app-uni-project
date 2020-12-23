@@ -148,14 +148,16 @@ export default class WeekTable extends Component {
 const StyledContainer = styled.div`
   position: relative;
   overflow: hidden;
-  padding-top: 5px;
-  padding-bottom: 10px;
   padding: 5px 20px 10px 20px;
 
   transition: 0.4s margin-top;
   z-index: 10;
   margin-top: ${(props) =>
     props.enlargeTable ? `-${props.cardsContainerHeight}px` : "0"};
+
+  @media only screen and (max-width: 600px) {
+    padding: 5px 10px 10px 10px;
+  }
 `;
 
 const StyledTableContainer = styled(TableContainer)`
@@ -184,5 +186,12 @@ const StyledTableContainer = styled(TableContainer)`
     font-family: "Montserrat", sans-serif;
     font-size: 1rem;
     font-weight: 600;
+  }
+
+  @media only screen and (max-width: 600px) {
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
   }
 `;
